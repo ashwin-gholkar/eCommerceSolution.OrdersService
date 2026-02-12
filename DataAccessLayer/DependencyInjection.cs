@@ -1,5 +1,8 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using DataAccessLayer.Repositories;
+using DataAccessLayer.RepositoryContracts;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
 
 namespace DataAccessLayer
 {
@@ -11,14 +14,22 @@ namespace DataAccessLayer
             string conString = configuration.GetConnectionString("MongoDb")!;
             conString.Replace("$MONGO_HOST",
                 Environment.GetEnvironmentVariable("MONGODB_HOST"))
-                .Replace("MONGODB_PORT",
+                .Replace("MONGO_PORT",
                 Environment.GetEnvironmentVariable("MONGODB_PORT"));
             // Add other repositories as needed
 
 
             services.AddSingleton<IMongoClient>(new MongoClient(conString));
 
-            services.AddScoped<IMongoDatabase>(provider => { });
+            services.AddScoped<IMongoDatabase>(provider => {
+
+                IMongoClient client =
+                provider.GetRequiredService<IMongoClient>();
+                return client.GetDatabase("OrdersDatabase"); 
+            });
+
+            services.AddScoped<IOrderRepository, OrdersRepository>();
+
             return services;
         }
     }
