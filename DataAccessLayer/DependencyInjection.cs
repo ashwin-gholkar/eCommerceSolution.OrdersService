@@ -28,7 +28,8 @@ namespace DataAccessLayer
                 return client.GetDatabase("OrdersDatabase"); 
             });
 
-            services.AddScoped<IOrderRepository, OrdersRepository>();
+            services.AddScoped<IOrderRepository, 
+                OrdersRepository>();
 
             return services;
         }
