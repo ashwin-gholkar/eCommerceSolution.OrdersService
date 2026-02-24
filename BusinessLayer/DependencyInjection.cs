@@ -1,10 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using BusinessLogicLayer.Mappers;
+using BusinessLogicLayer.ServiceContracts;
+using BusinessLogicLayer.Services;
+using BusinessLogicLayer.Validators;
+using FluentValidation;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BusinessLogicLayer
 {
@@ -15,6 +15,12 @@ namespace BusinessLogicLayer
         {
 
             // Add other repositories as needed
+            services.AddValidatorsFromAssemblyContaining<OrderAddRequestValidator>();
+
+            services.AddAutoMapper(config => { },
+            typeof(OrderAddRequestToOrderMappingProfile).Assembly);
+
+            services.AddScoped<IOrderService, OrdersService>();
             return services;
         }
 
