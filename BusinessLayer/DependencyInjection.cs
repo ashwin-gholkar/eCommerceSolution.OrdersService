@@ -21,6 +21,12 @@ namespace BusinessLogicLayer
             typeof(OrderAddRequestToOrderMappingProfile).Assembly);
 
             services.AddScoped<IOrderService, OrdersService>();
+
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = $"{configuration["REDIS_HOST"]}:{configuration["REDIS_PORT"]}";
+            });         
+
             return services;
         }
 
