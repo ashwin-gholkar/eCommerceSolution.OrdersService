@@ -3,7 +3,6 @@ using BusinessLogicLayer.ServiceContracts;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
-using System.Data;
 
 namespace OrdersMicrosservice.API.Controllers
 {
@@ -16,14 +15,14 @@ namespace OrdersMicrosservice.API.Controllers
         [HttpGet("")]
         public async Task<IEnumerable<OrderResponse?>> Get()
         {
-            List<OrderResponse?> orders =  await _orderService.GetOrders();
+            List<OrderResponse?> orders = await _orderService.GetOrders();
             return orders;
         }
         [HttpGet("search/orderid/{orderID}")]
         public async Task<OrderResponse?> GetOrderByOrderID(Guid orderID)
         {
             FilterDefinition<Order> filter = Builders<Order>.
-                                            Filter.Eq(temp => temp.OrderID , orderID);
+                                            Filter.Eq(temp => temp.OrderID, orderID);
             OrderResponse? order = await _orderService.GetOrderByCondition(filter);
             return order;
         }
@@ -33,7 +32,7 @@ namespace OrdersMicrosservice.API.Controllers
             FilterDefinition<Order> filter = Builders<Order>.
                                             Filter.ElemMatch(temp => temp.OrderItems,
                                             Builders<OrderItem>.Filter.Eq(tempProduct
-                                            => tempProduct.ProductID,productID  ));
+                                            => tempProduct.ProductID, productID));
 
             List<OrderResponse?> orders = await _orderService.GetOrdersByCondition(filter);
             return orders;
@@ -42,7 +41,7 @@ namespace OrdersMicrosservice.API.Controllers
         public async Task<List<OrderResponse?>> GetOrdersByOrderDate(DateTime orderDate)
         {
             FilterDefinition<Order> filter = Builders<Order>.
-                                            Filter.Eq(temp => temp.OrderDate.ToString("yyy-MM-dd") ,
+                                            Filter.Eq(temp => temp.OrderDate.ToString("yyy-MM-dd"),
                                             orderDate.ToString("yyy-MM-dd"));
 
             List<OrderResponse?> orders = await _orderService.GetOrdersByCondition(filter);
@@ -69,7 +68,7 @@ namespace OrdersMicrosservice.API.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult?> OrderUpdate(Guid orderID)
+        public async Task<IActionResult?> DeleteOrder(Guid orderID)
         {
             if (orderID == Guid.Empty) return BadRequest("Invalid OrderID");
 
@@ -79,13 +78,14 @@ namespace OrdersMicrosservice.API.Controllers
             return Ok(isDeleted);
         }
         [HttpGet("search/userid/{userID}")]
-        public async Task<IEnumerable<OrderResponse?>> GetOrdersByOrderDate(Guid userID)
+        public async Task<IEnumerable<OrderResponse?>> GetOrdersByUserID(Guid userID)
         {
             FilterDefinition<Order> filter = Builders<Order>.
-                                            Filter.Eq(temp => temp.UserID,userID);
+                                            Filter.Eq(temp => temp.UserID, userID);
 
             List<OrderResponse?> orders = await _orderService.GetOrdersByCondition(filter);
             return orders;
         }
+
     }
 }

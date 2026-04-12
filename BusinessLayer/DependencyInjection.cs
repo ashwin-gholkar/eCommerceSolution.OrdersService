@@ -15,7 +15,9 @@ namespace BusinessLogicLayer
         {
 
             // Add other repositories as needed
-            services.AddValidatorsFromAssemblyContaining<OrderAddRequestValidator>();
+            //services.AddValidatorsFromAssemblyContaining<OrderAddRequestValidator>();
+
+            services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
 
             services.AddAutoMapper(config => { },
             typeof(OrderAddRequestToOrderMappingProfile).Assembly);
@@ -25,7 +27,7 @@ namespace BusinessLogicLayer
             services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = $"{configuration["REDIS_HOST"]}:{configuration["REDIS_PORT"]}";
-            });         
+            });
 
             return services;
         }

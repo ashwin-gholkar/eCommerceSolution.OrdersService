@@ -11,24 +11,27 @@ namespace DataAccessLayer
         public static IServiceCollection AddDataAccessLayer(this IServiceCollection services, IConfiguration configuration)
         {
 
+            // string conString = configuration.GetConnectionString("MongoDb")!;
+            // conString.Replace("$MONGO_HOST",
+            //     Environment.GetEnvironmentVariable("MONGODB_HOST"))
+            //     .Replace("MONGO_PORT",
+            //     Environment.GetEnvironmentVariable("MONGODB_PORT"));
+
             string conString = configuration.GetConnectionString("MongoDb")!;
-            conString.Replace("$MONGO_HOST",
-                Environment.GetEnvironmentVariable("MONGODB_HOST"))
-                .Replace("MONGO_PORT",
-                Environment.GetEnvironmentVariable("MONGODB_PORT"));
             // Add other repositories as needed
 
 
             services.AddSingleton<IMongoClient>(new MongoClient(conString));
 
-            services.AddScoped<IMongoDatabase>(provider => {
+            services.AddScoped<IMongoDatabase>(provider =>
+            {
 
                 IMongoClient client =
                 provider.GetRequiredService<IMongoClient>();
-                return client.GetDatabase("OrdersDatabase"); 
+                return client.GetDatabase("OrdersDatabase");
             });
 
-            services.AddScoped<IOrderRepository, 
+            services.AddScoped<IOrderRepository,
                 OrdersRepository>();
 
             return services;
